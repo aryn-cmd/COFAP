@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>COFAP | Centre of Excellence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+</head>
+<body>
+  <section class="auth-screen" id="auth-screen">
+    <div class="auth-intro"><a class="brand auth-brand" href="#"><span class="brand-mark">C</span><span><strong>COFAP</strong><small>Centre of excellence</small></span></a><span class="eyebrow light">Fitness · Academics · Placements</span><h1>Make your week<br><em>count.</em></h1><p>Build momentum with your people. Every study session, workout, and meaningful task moves the whole group forward.</p><div class="auth-stats"><span><b>3</b><small>pillars</small></span><span><b>60</b><small>pts to platinum</small></span><span><b>01</b><small>shared space</small></span></div></div>
+    <div class="auth-card"><div class="auth-card-heading"><span class="eyebrow">Welcome to COFAP</span><h2 id="auth-title">Sign in</h2><p id="auth-subtitle">Your progress lives here.</p></div><form id="auth-form"><label for="auth-email">Email address</label><input id="auth-email" type="email" autocomplete="email" placeholder="you@example.com" required /><label for="auth-password">Password</label><input id="auth-password" type="password" autocomplete="current-password" placeholder="At least 6 characters" minlength="6" required /><button class="primary-button" type="submit" id="auth-submit">Sign in <i data-lucide="arrow-right"></i></button></form><p class="auth-switch" id="auth-switch">New to COFAP? <button type="button">Create an account</button></p><p class="auth-message" id="auth-message" role="status"></p></div>
+  </section>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#top" aria-label="COFAP home">
+        <span class="brand-mark">C</span>
+        <span><strong>COFAP</strong><small>Centre of excellence</small></span>
+      </a>
+      <nav class="nav-list" aria-label="Primary navigation">
+        <a class="nav-item active" href="#top"><i data-lucide="layout-dashboard"></i><span>Dashboard</span></a>
+        <a class="nav-item" href="#activity"><i data-lucide="plus-circle"></i><span>Log activity</span></a>
+        <a class="nav-item" href="#leaderboard"><i data-lucide="trophy"></i><span>Leaderboard</span></a>
+        <a class="nav-item" href="#playbook"><i data-lucide="book-open"></i><span>Playbook</span></a>
+        <a class="nav-item admin-link" href="#admin"><i data-lucide="shield-check"></i><span>Admin</span></a>
+      </nav>
+      <div class="sidebar-note">
+        <span class="eyebrow">FAP protocol</span>
+        <p>Small wins compound. Keep the week moving.</p>
+        <div class="mini-rule"><span></span><b>3</b><small>pillars</small></div>
+      </div>
+      <div class="user-chip"><span class="avatar">AS</span><span><b>Arjun Sharma</b><small>Member since 2026</small></span><i data-lucide="settings-2"></i></div>
+    </aside>
+
+    <main class="main-content" id="top">
+      <header class="topbar">
+        <div><span class="eyebrow" id="current-datetime">Saturday, 22 August 2026 · 09:00 AM</span><h1>Good morning, Aaryan<span class="accent">.</span></h1></div>
+        <div class="top-actions"><button class="icon-button" title="Notifications" aria-label="Notifications"><i data-lucide="bell"></i><span class="notification-dot"></span></button><button class="avatar avatar-large" title="Profile">AS</button><button class="sign-out-button" id="sign-out">Sign out</button></div>
+      </header>
+
+      <section class="hero-grid">
+        <div class="hero-panel">
+          <div class="hero-copy"><span class="eyebrow light">Your weekly FAP score</span><h2 id="hero-score">42 <small>/ 60 pts</small></h2><p id="hero-message">Eight more points to reach Platinum.</p></div>
+          <div class="progress-ring" aria-label="Weekly score progress"><svg viewBox="0 0 120 120"><circle class="ring-track" cx="60" cy="60" r="51"></circle><circle id="ring-progress" class="ring-progress" cx="60" cy="60" r="51"></circle></svg><span id="ring-label">70%</span></div>
+          <div class="hero-foot"><span><i data-lucide="calendar-days"></i> 18–24 Aug</span><span class="tier-badge" id="tier-badge">GOLD</span></div>
+        </div>
+        <div class="streak-panel"><div class="section-kicker"><span>Momentum</span><i data-lucide="flame"></i></div><div class="streak-number" id="streak-number">06</div><p>day streak</p><div class="streak-dots" id="streak-dots"></div><div class="streak-labels"><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span><span>SUN</span></div></div>
+      </section>
+
+      <section class="content-section" id="activity">
+        <div class="section-heading"><div><span class="eyebrow">Make it count</span><h2>Log an activity</h2></div><button class="text-button" id="clear-activity">Clear recent <i data-lucide="arrow-up-right"></i></button></div>
+        <div class="activity-layout">
+          <div class="activity-form panel">
+            <div class="category-tabs" role="tablist"><button class="category-tab active" role="tab" data-category="academic"><i data-lucide="graduation-cap"></i><span>Academic</span><b>+4</b></button><button class="category-tab" role="tab" data-category="fitness"><i data-lucide="dumbbell"></i><span>Fitness</span><b>+3</b></button><button class="category-tab" role="tab" data-category="misc"><i data-lucide="sparkles"></i><span>Misc</span><b>+2</b></button></div>
+            <form id="activity-form"><label for="activity-name">What did you accomplish?</label><input id="activity-name" type="text" placeholder="e.g. Solved 20 aptitude questions" required maxlength="70" /><div class="form-row"><label class="date-field" for="activity-date">Date<input id="activity-date" type="date" required /></label><button class="primary-button" type="submit"><i data-lucide="plus"></i> Add points</button></div></form>
+          </div>
+          <div class="recent panel"><div class="panel-title"><h3>Recent activity</h3><span class="live-indicator">LIVE</span></div><div id="activity-list"></div></div>
+        </div>
+      </section>
+
+      <section class="content-section" id="leaderboard">
+        <div class="section-heading"><div><span class="eyebrow">The weekly race</span><h2>Leaderboard</h2></div><div class="week-select">This week <i data-lucide="chevron-down"></i></div></div>
+        <div class="leaderboard panel"><div class="leaderboard-head"><span>Rank</span><span>Member</span><span>Points</span><span>Status</span></div><div id="leaderboard-list"></div></div>
+      </section>
+
+      <section class="content-section admin-section" id="admin">
+        <div class="section-heading"><div><span class="eyebrow">Admin controls</span><h2>Manage members</h2></div><span class="admin-state"><i data-lucide="lock-keyhole-open"></i> Admin access</span></div>
+        <div class="admin-layout">
+          <form class="admin-form panel" id="member-form"><label for="member-name">Add a COFAPper</label><div class="admin-form-row"><input id="member-name" type="text" placeholder="Full name" maxlength="50" required /><button class="primary-button" type="submit"><i data-lucide="user-plus"></i> Add member</button></div><p>New members join the leaderboard with 0 points.</p></form>
+          <div class="member-count panel"><span class="eyebrow">Current roster</span><strong id="member-count">06</strong><span>active members</span></div>
+        </div>
+      </section>
+
+      <section class="content-section team-section" id="team">
+        <div class="section-heading"><div><span class="eyebrow">Your COFAP space</span><h2>Teams</h2></div><span class="team-status" id="team-status">No team selected</span></div>
+        <div class="team-layout">
+          <form class="team-form panel" id="create-team-form"><span class="team-form-icon"><i data-lucide="users-round"></i></span><div><h3>Create a team</h3><p>Start a private leaderboard and invite your friends.</p><label for="team-name">Team name</label><input id="team-name" type="text" placeholder="e.g. COFAP Alpha" maxlength="60" required /><button class="primary-button" type="submit"><i data-lucide="plus"></i> Create team</button></div></form>
+          <form class="team-form panel" id="join-team-form"><span class="team-form-icon join"><i data-lucide="key-round"></i></span><div><h3>Join a team</h3><p>Paste the team key shared by a friend.</p><label for="team-key">Team passkey</label><input id="team-key" type="text" placeholder="e.g. A7K2P9QX" maxlength="10" required /><button class="primary-button" type="submit"><i data-lucide="arrow-right"></i> Join team</button></div></form>
+        </div>
+      </section>
+
+      <section class="content-section playbook-section" id="playbook"><div class="section-heading"><div><span class="eyebrow">The FAP protocol</span><h2>Three ways to move up</h2></div></div><div class="protocol-grid"><article><span class="protocol-icon academic"><i data-lucide="graduation-cap"></i></span><div><b>Academic</b><p>Study, projects, classes, and placement prep.</p></div><strong>4 pts</strong></article><article><span class="protocol-icon fitness"><i data-lucide="dumbbell"></i></span><div><b>Fitness</b><p>Every intentional workout session.</p></div><strong>3 pts</strong></article><article><span class="protocol-icon misc"><i data-lucide="sparkles"></i></span><div><b>Miscellaneous</b><p>Healthy cooking, MOOCs, and formal events.</p></div><strong>2 pts</strong></article></div></section>
+      <footer><span>COFAP / 01</span><span>Built for the people who keep showing up.</span></footer>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>
