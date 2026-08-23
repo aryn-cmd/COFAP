@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 768 768" role="img" aria-labelledby="title desc">
+  <title id="title">COFAP logo</title>
+  <desc id="desc">White COFAP wordmark on a black square</desc>
+  <rect width="768" height="768" fill="#000"/>
+  <g fill="#fff" font-family="Arial Black, Arial, sans-serif" font-style="italic" font-weight="900" text-anchor="middle">
+    <text x="390" y="382" font-size="238" letter-spacing="-24">CO</text>
+    <text x="383" y="532" font-size="211" letter-spacing="-21">FAP</text>
+  </g>
+</svg>

@@ -1,57 +1,55 @@
 # COFAP
 
-COFAP is a weekly accountability platform for Fitness, Academics, and Placements. Members log meaningful work, earn FAP points, and compete on a shared team leaderboard.
+COFAP is a weekly accountability platform for Fitness, Academics, and Placements. Members log meaningful work, earn FAP points, and compete on team leaderboards.
+
+This is a Vite + React single-page app talking directly to Supabase (auth, Postgres, Realtime) — no separate backend server.
 
 ## Point rules
 
-- Academic: 4 points per task
-- Fitness: 3 points per workout session
+- Academic: 1 point per hour logged, capped at 8 hours/person/day
+- Fitness: 3 points per session
 - Miscellaneous: 2 points per meaningful task
-- Platinum: 60+ points per week
-- Gold: 50-59 points
-- Silver: 40-49 points
-- Bronze: 30-39 points
-- Unranked: below 30 points
+- Platinum: 60+ points (no upper cap — 60 is the last named tier, not a ceiling)
+- Gold: 50-59 · Silver: 40-49 · Bronze: 30-39 · Unranked: below 30
 
-## Project files
+Points are computed **server-side** by a database trigger — the client never gets to set its own point value.
 
-- `index.html`: public welcome screen and dashboard markup
-- `styles.css`: visual design and responsive layout
-- `app.js`: authentication, team actions, activity UI, and leaderboard behavior
-- `supabase-config.js`: public Supabase project configuration
-- `supabase-schema.sql`: database tables, security policies, and team functions
+## Project layout
+
+```
+index.html            Vite entry
+src/main.jsx           React root
+src/App.jsx             Auth/profile bootstrapping + route table
+src/lib/supabase.js     Supabase client
+src/styles.css          All styling
+src/components/         Layout (sidebar/topbar/toast), NotificationBell
+src/pages/               One file per route: Auth, Onboard, Dashboard, Activity,
+                          Leaderboard, Teams, TeamDetail, Notifications, Profile, Admin
+supabase-schema.sql       Full database schema — run this in Supabase's SQL editor
+```
 
 ## Supabase setup
 
-1. Create or open the Supabase project.
-2. In **SQL Editor**, run `supabase-schema.sql`.
-3. In **Authentication -> URL Configuration**, set the Site URL to your deployed Vercel URL.
-4. Add this redirect pattern, replacing the domain:
+1. Open your Supabase project → **SQL Editor** → paste and run the whole of `supabase-schema.sql`. It's idempotent, so re-running it later after edits is safe.
+2. Make yourself admin — sign up in the running app first with the email you want as admin, then run (see the bottom of `supabase-schema.sql` for the exact statement):
+   ```sql
+   update public.profiles set is_admin = true
+   where id = (select id from auth.users where email = 'you@example.com');
+   ```
+3. **Authentication → URL Configuration**: set the Site URL to your deployed domain, and add a redirect pattern for it (e.g. `https://your-app.vercel.app/**`).
+4. **Database → Extensions**: confirm `pg_cron` is enabled (the schema tries to enable it itself, but some plans require doing this from the dashboard). This only powers the nightly cleanup of completed 30-day team departures — everything else works without it.
 
-   `https://your-project.vercel.app/**`
-
-The frontend uses only the Supabase publishable/anon key. Never put a service-role key, database password, or other secret in this project.
+Only the Supabase **anon/publishable key** is used client-side. Never put a service-role key or DB password in this project.
 
 ## Run locally
 
-Because authentication and browser modules work best over HTTP, run a local static server from this folder:
-
-```powershell
-python -m http.server 5500
+```bash
+npm install
+npm run dev
 ```
 
-Open `http://localhost:5500` in your browser.
+Copy `.env.example` to `.env` and fill in your Supabase project URL and publishable key first (a working `.env` is already included in this handoff, pointed at the project you've been using).
 
-## Deploy to Vercel
+## Deployment
 
-1. Push this folder to a GitHub repository.
-2. In Vercel, choose **Add New -> Project** and import the repository.
-3. Leave the build command and output directory empty.
-4. Deploy.
-5. Copy the Vercel URL into Supabase Authentication URL Configuration.
-
-Vercel serves this as a static site. Supabase provides authentication and shared database storage.
-
-## Current product status
-
-Authentication and team create/join actions are wired to Supabase. The next integration step is to load the selected team from `group_members` and read/write activities from the `activities` table so the leaderboard is shared across every device.
+See the deployment notes in the chat message this was delivered with — short version: same Vercel + Supabase you already have, but Vercel needs to build this now (it's no longer static HTML), and your Supabase anon key needs to be added as an **environment variable** in Vercel rather than just living in a committed file.
