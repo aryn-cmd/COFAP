@@ -29,41 +29,40 @@ function App() {
       ]);
     }
 
-    async function initSessionAndProfile() {
-      setLoading(true);
-      try {
-        const { data: { session: currentSession }, error } = await withTimeout(supabase.auth.getSession(), 10000, 'Session check');
-        if (error) throw error;
+    // Deliberately the ONLY thing driving session state. onAuthStateChange
+    // fires immediately on subscribe with whatever session is already
+    // stored (or null), so a separate manual getSession() call alongside it
+    // is redundant — and was the source of a real deadlock: when a session
+    // already exists, this event fires while Supabase's client is still
+    // mid-way through its own internal locking for that event, so making
+    // another Supabase call synchronously from inside this callback can
+    // contend with that lock and hang indefinitely. Deferring the actual
+    // fetch by one tick (setTimeout 0) lets that internal bookkeeping
+    // finish first.
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+      if (!alive) return;
+      setSession(nextSession);
+      if (!nextSession) {
+        setProfile(null);
+        setLoading(false);
+        return;
+      }
+      setTimeout(async () => {
         if (!alive) return;
-
-        setSession(currentSession);
-        if (currentSession) {
-          const { data } = await withTimeout(
-            supabase.from('profiles').select('*').eq('id', currentSession.user.id).maybeSingle(),
+        try {
+          const { data, error } = await withTimeout(
+            supabase.from('profiles').select('*').eq('id', nextSession.user.id).maybeSingle(),
             10000,
             'Profile lookup',
           );
+          if (error) throw error;
           if (alive) setProfile(data);
-        } else {
-          setProfile(null);
+        } catch (err) {
+          if (alive) setFatalError(err.message || 'Could not reach Supabase.');
+        } finally {
+          if (alive) setLoading(false);
         }
-      } catch (err) {
-        if (alive) setFatalError(err.message || 'Could not reach Supabase.');
-      } finally {
-        if (alive) setLoading(false);
-      }
-    }
-
-    initSessionAndProfile();
-
-    const { data: listener } = supabase.auth.onAuthStateChange(async (_event, nextSession) => {
-      setSession(nextSession);
-      if (nextSession) {
-        const { data } = await supabase.from('profiles').select('*').eq('id', nextSession.user.id).maybeSingle();
-        setProfile(data);
-      } else {
-        setProfile(null);
-      }
+      }, 0);
     });
 
     return () => {
